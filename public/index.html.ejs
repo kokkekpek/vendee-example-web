@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="192.png" />
+    <link rel="manifest" href="manifest.json" />
+
+    <meta property="og:title" content="Vendee example" />
+    <meta property="og:description" content="Vendee example" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://example.vendee.top/512.png" />
+
+    <title>Vendee example</title>
+</head>
+<body>
+<div id="root"></div>
+<% if (webpackConfig.mode === 'production') { %>
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<% } else { %>
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+<% } %>
+</body>
+</html>
