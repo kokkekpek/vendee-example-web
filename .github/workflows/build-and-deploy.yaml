@@ -1,0 +1,51 @@
+name: 'Deploy'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  HOST: vendee.top
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.0
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14
+
+      - name: Build
+        run: |
+          yarn install
+          yarn build
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ env.HOST }}
+          port: 22
+          username: root
+          key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+          source: docker,docker-compose.yaml,.env.prod,dist
+          target: /srv/${{ github.repository }}
+          overwrite: true
+
+      - name: Docker compose up
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          script: |
+            cd /srv/${{ github.repository }}
+            docker compose --env-file .env.prod pull
+            docker compose --env-file .env.prod down
+            docker compose --env-file .env.prod up -d
+          host: ${{ env.HOST }}
+          port: 22
+          username: root
+          key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
